@@ -1,41 +1,72 @@
-# Prerequisites
-*.d
+# -----------------------------
+# Vivado / AMD generated files
+# -----------------------------
+*.log
+*.jou
+*.str
+*.vdi
+*.pb
+*.pyc
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+.Xil/
+.cache/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.gen/
+*.tmp/
 
-# Precompiled Headers
-*.gch
-*.pch
+fsm_encoding.os
+tab_*/
+webtalk.*
+vivado_pid*.str
+hs_err_pid*
+xelab.*
+xsim.*
+xvlog.*
+xvhdl.*
+*.backup.*
+*.debug
 
-# Linker files
-*.ilk
+# -----------------------------
+# Generated outputs
+# -----------------------------
+*.bit
+*.bin
+*.mcs
+*.svf
+*.image
+*.ltx
 
-# Debugger Files
-*.pdb
+*.dcp
+*.edf
+*.edif
+*.ngc
+*.ngo
+*.ncd
+*.pcf
+*.sdf
+*.twr
+*.twx
+*.xpi
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Simulation waveforms / dumps
+*.wdb
+*.vcd
+*.saif
+*.tcf
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+# Compiled software artifacts
+*.elf
 *.a
+*.sa
+*.so
 *.lib
 
-# Executables
-*.exe
-*.out
-*.app
-
-# debug information files
-*.dwo
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
