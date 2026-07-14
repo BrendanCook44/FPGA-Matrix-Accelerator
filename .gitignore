@@ -1,0 +1,72 @@
+# -----------------------------
+# Vivado / AMD generated files
+# -----------------------------
+*.log
+*.jou
+*.str
+*.vdi
+*.pb
+*.pyc
+
+.Xil/
+.cache/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.gen/
+*.tmp/
+
+fsm_encoding.os
+tab_*/
+webtalk.*
+vivado_pid*.str
+hs_err_pid*
+xelab.*
+xsim.*
+xvlog.*
+xvhdl.*
+*.backup.*
+*.debug
+
+# -----------------------------
+# Generated outputs
+# -----------------------------
+*.bit
+*.bin
+*.mcs
+*.svf
+*.image
+*.ltx
+
+*.dcp
+*.edf
+*.edif
+*.ngc
+*.ngo
+*.ncd
+*.pcf
+*.sdf
+*.twr
+*.twx
+*.xpi
+
+# Simulation waveforms / dumps
+*.wdb
+*.vcd
+*.saif
+*.tcf
+
+# Compiled software artifacts
+*.elf
+*.a
+*.sa
+*.so
+*.lib
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
