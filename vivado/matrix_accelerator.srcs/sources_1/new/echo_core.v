@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 07/15/2026 10:22:20 PM
+// Create Date: 07/17/2026 09:59:27 PM
 // Design Name: 
-// Module Name: uart_tx
+// Module Name: echo_core
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,11 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module uart_tx(
+module echo_core(
     input clk,
-    input [7:0] data_to_send,
-    input tx_start,
-    output tx_line,
-    output tx_ready
+    input [7:0] data_in,
+    input data_valid,
+    output [7:0] data_out,
+    output tx_start,
+    input tx_ready
     );
 endmodule

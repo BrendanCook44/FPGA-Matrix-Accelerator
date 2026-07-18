@@ -23,7 +23,7 @@
 module uart_rx(
     input clk,
     input rx_line,
-    output data_out,
+    output [7:0] data_out,
     output data_valid
     );
 endmodule
