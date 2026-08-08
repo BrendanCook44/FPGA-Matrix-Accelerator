@@ -20,10 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module uart_rx(
+module uart_rx #(
+    parameter CLKS_PER_BIT = 868
+)(
     input clk,
     input rx_line,
     output [7:0] data_out,
     output data_valid
     );
+    
+    // Body: Internal Declarations
+    reg [$clog2(CLKS_PER_BIT)-1:0] counter;
+    
+    
+    
+    
+    
+    
+
 endmodule
