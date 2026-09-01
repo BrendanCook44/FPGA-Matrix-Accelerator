@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/15/2026 10:22:20 PM
-// Design Name: 
-// Module Name: uart_tx
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 module uart_tx #(
     parameter CLKS_PER_BIT = 868
@@ -39,6 +20,7 @@ module uart_tx #(
     reg [9:0] frame = 0;
     
     always @ (posedge clk) begin
+        // Trigger TX
         if (tx_start && tx_ready && state == IDLE) begin
             tx_ready <= 0;
             tx_line <= 0;
