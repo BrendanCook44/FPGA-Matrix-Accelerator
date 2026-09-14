@@ -60,7 +60,7 @@ module uart_echo_top_tb;
         
         send_byte(8'hAA);
         
-        #1000;
+        receive_byte(received);
     
         $display("End of UART Echo Application Simulation");   
     
