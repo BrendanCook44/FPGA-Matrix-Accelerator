@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
-module uart_echo_top #(
+module matrix_accelerator_top #(
     parameter CLKS_PER_BIT = 868
 )(
     // External Wires (Mapped To Hardware Via XDC File)
@@ -24,7 +23,7 @@ module uart_echo_top #(
         .data_valid(data_valid)
     );
     
-    echo_core u_echo(
+    matrix_accelerator u_matrix_accelerator(
         .clk(clk),
         .data_in(rx_byte),
         .data_valid(data_valid),
@@ -42,4 +41,3 @@ module uart_echo_top #(
     );
 
 endmodule
-`default_nettype wire

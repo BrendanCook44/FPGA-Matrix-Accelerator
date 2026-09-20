@@ -1,0 +1,53 @@
+`timescale 1ns / 1ps
+
+module matrix_accelerator(
+    input logic clk,
+    input logic [7:0] data_in,
+    input logic data_valid,
+    output logic [7:0] data_out = 0,
+    output logic tx_start = 0,
+    input logic tx_ready
+    );
+    
+    // FSM:
+    // 1 - Load A Matrix - First 64 Bytes from UART RX
+    // 2 - Load B Matrix - Next 64 Bytes from UART RX
+    // 3 - Compute C Matrix
+    // 4 - Stream C Matrix 64 Bytes Out To UART TX
+    
+    typedef enum logic [1:0] {
+        IDLE                = 2'b00,
+        RECEIVING_DATA      = 2'b01,
+        COMPUTING_MATRIX    = 2'b10,
+        TRANSMITTING_MATRIX = 2'b11
+    } state_t;
+    
+    // Body: Internal Declarations
+    logic [$clog2(128)-1:0] counter = 0;
+    state_t state = IDLE;
+    
+    // Matrix A
+    logic signed [7:0] matrixA [0:7][0:7];
+    
+    // Matrix B
+    logic signed [7:0] matrixB [0:7][0:7];
+    
+    // Output Matrix C
+    logic signed [7:0] matrixC [0:7][0:7];
+    
+   always_ff @ (posedge clk) begin
+    
+   
+   
+   
+   
+    // Check for 64 Data Valid Signals from UART RX for Matrix A
+    // if (counter > 64) begin
+        // if (data_valid) begin
+            // matrixA[i][j] <= data_in;
+            // counter <= counter + 1;
+        // end
+    // end
+   end
+
+endmodule
