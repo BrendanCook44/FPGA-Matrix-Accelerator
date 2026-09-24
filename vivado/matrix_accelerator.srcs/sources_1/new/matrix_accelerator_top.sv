@@ -1,7 +1,8 @@
 `timescale 1ns / 1ps
 
 module matrix_accelerator_top #(
-    parameter CLKS_PER_BIT = 868
+    parameter CLKS_PER_BIT = 868,
+    parameter N = 8
 )(
     // External Wires (Mapped To Hardware Via XDC File)
     input wire RsRx,
@@ -23,7 +24,7 @@ module matrix_accelerator_top #(
         .data_valid(data_valid)
     );
     
-    matrix_accelerator u_matrix_accelerator(
+    matrix_accelerator # (.N(N)) u_matrix_accelerator(
         .clk(clk),
         .data_in(rx_byte),
         .data_valid(data_valid),
