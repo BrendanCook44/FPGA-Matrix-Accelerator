@@ -1,5 +1,12 @@
 `timescale 1ns / 1ps
 
+// FSM - Matrix Accelerator:
+// 1 - Populate A Matrix (Row Major Order) - First 64 Bytes from UART RX
+// 2 - Populate B Matrix (Row Major Order) - Next 64 Bytes from UART RX
+// 3 - Compute C Matrix
+// 4 - Send C Matrix 64 Bytes Out To UART TX
+// 5 - Set state to IDLE
+
 module matrix_accelerator #(
     parameter N = 8
 )(
@@ -11,20 +18,10 @@ module matrix_accelerator #(
     input logic tx_ready
     );
     
-    // FSM:
-    // 1 - Load A Matrix - First 64 Bytes from UART RX
-    // 2 - Load B Matrix - Next 64 Bytes from UART RX
-    // 3 - Compute C Matrix
-    // 4 - Stream C Matrix 64 Bytes Out To UART TX
+    // Package Imports
+    import matrix_accelerator_pkg::*;
     
-    typedef enum logic [1:0] {
-        IDLE                = 2'b00,
-        RECEIVING_DATA      = 2'b01,
-        COMPUTING_MATRIX    = 2'b10,
-        TRANSMITTING_MATRIX = 2'b11
-    } state_t;
-    
-    // Body: Internal Declarations
+    // Internal Module Declarations
 
     // i, j, k counters
     logic [3:0] i = 0;
@@ -89,25 +86,6 @@ module matrix_accelerator #(
    end
 
 endmodule
-    
-    
-    // Loop through rows
-//    for (int i = 0; i < N; i++) begin
-    
-//        // Loop though columns
-//        for (int j = 0; j < N; j++) begin
-//                 matrixC[i][j] = 0;
-                 
-//            // Loop through elements inside rows and columns to multiply and add them up
-//            for (int k = 0; k < N; k++) begin
-//                matrixC[i][j] = matrixA[i][k] * matrixB[k][j];
-                
-//            end
-//        end
-//    end
-   
-   
-   
    
 //     Check for 64 Data Valid Signals from UART RX for Matrix A
 //     if (counter > 64) begin

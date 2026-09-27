@@ -1,5 +1,12 @@
 `timescale 1ns / 1ps
 
+// FSM - UART RX:
+// 1 - Listen for line transition from HIGH to LOW
+// 2 - Start sampling in the middle of each of the 8 bits
+// 3 - Assign bit on RX_LINE during sample to DATA_OUT[bit_index]
+// 4 - Set DATA_VALID to true for consumption of data after sampling the last bit
+// 5 - Set state to IDLE
+
 module uart_rx #(
     parameter CLKS_PER_BIT = 868
 )(
@@ -13,7 +20,7 @@ module uart_rx #(
     localparam INITIAL_CHECK = 1;
     localparam RECEIVING = 2;
     
-    // Body: Internal Declarations
+    // Internal Module Declarations
     reg [$clog2(CLKS_PER_BIT)-1:0] counter;
     reg [3:0] bit_index = 0;
     reg [1:0] state = IDLE;

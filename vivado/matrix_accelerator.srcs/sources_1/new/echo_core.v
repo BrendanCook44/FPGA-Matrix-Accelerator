@@ -1,5 +1,10 @@
 `timescale 1ns / 1ps
 
+// FSM - UART Echo:
+// 1 - Receive a byte via UART RX Module
+// 2 - Add +1 to received byte
+// 3 - Transmit modified +1 byte out via UART TX Module
+
 module echo_core(
     input wire clk,
     input wire [7:0] data_in,
@@ -9,7 +14,7 @@ module echo_core(
     input wire tx_ready
     );
     
-    // Body: Internal Declarations
+    // Internal Module Declarations
     
    always @ (posedge clk) begin
         if (data_valid && tx_ready) begin

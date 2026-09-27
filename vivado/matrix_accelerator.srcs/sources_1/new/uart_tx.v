@@ -1,5 +1,10 @@
 `timescale 1ns / 1ps
 
+// FSM - UART TX:
+// 1 - Listen for TX Start Signal & TX Ready Signals
+// 2 - Send each bit in the frame out of TX_LINE
+// 3 - Set state to IDLE & TX_READY to true
+
 module uart_tx #(
     parameter CLKS_PER_BIT = 868
 )(
@@ -13,7 +18,7 @@ module uart_tx #(
     localparam IDLE = 0;
     localparam SENDING = 1;
     
-    // Body: Internal Declarations
+    // Internal Module Declarations
     reg [$clog2(CLKS_PER_BIT)-1:0] counter;
     reg [3:0] bit_index = 0;
     reg state = IDLE;
