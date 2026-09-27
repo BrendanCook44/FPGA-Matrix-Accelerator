@@ -25,25 +25,51 @@ module matrix_accelerator_tb;
     // Initial Simulation Setup
     always #5 clk = ~clk;
     
-    initial begin
-        $display("Start of Matrix Accelerator Simulation");
-        
-        // Fill Matrix A and B
+    // Bit Width Test
+    task test_bit_width();
+
         for (int i = 0; i < N; i++) begin
             for (int j = 0; j < N; j++) begin
                 dut.matrixA[i][j] = -128;
-                
-                // dut.matrixA[i][j] = $urandom();
-                
                 dut.matrixB[i][j] = -128;
-                
             end
         end
        
        wait (dut.state == TRANSMITTING_MATRIX);
+       @(posedge clk);
        
-       $display("Done");
+        for (int i = 0; i < N; i++) begin
+            for (int j = 0; j < N; j++) begin
+                assert (dut.matrixC[i][j] == 131072)
+                    else $error("C[%0d][%0d] = %0d, expected 131072", i, j, dut.matrixC[i][j]);
+            end
+        end
+       
+       $display("End of Bit Width Test");
        $finish;
+       
+    endtask
+    
+    // Randomly Populate Matrices
+    task populate_matrices_randomly();
+            for (int i = 0; i < N; i++) begin
+                for (int j = 0; j < N; j++) begin
+                    dut.matrixA[i][j] = $urandom();
+                    dut.matrixB[i][j] = $urandom();
+                end
+            end
+       
+       wait (dut.state == TRANSMITTING_MATRIX);
+       
+       $display("Successfully Generated Matrix Values");
+       $finish;
+       
+    endtask
+    
+    initial begin
+        $display("Start of Matrix Accelerator Module Simulation");
+        
+        test_bit_width();
 
     end
     
