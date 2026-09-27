@@ -42,6 +42,7 @@ module matrix_accelerator #(
     
     // State
     state_t state = COMPUTING_MATRIX;
+    matrix_selection_t matrix_select = MATRIX_A;
 
     // Accumulator    
     logic signed [19:0] accumulator = 0;
@@ -53,7 +54,47 @@ module matrix_accelerator #(
         end
         
         if (state == RECEIVING_DATA && data_valid) begin
-            // Listen for 128 Bytes to Populate Matrices A and B
+            // Listen for N * N * 2 Bytes to Populate Matrices A and B
+            if (i == N-1 && j == N-1) begin
+                i <= 0;
+                j <= 0;
+            
+                if (matrix_select == MATRIX_A) begin
+                    matrixA[i][j] <= data_in;
+                    matrix_select <= MATRIX_B;
+                end
+                
+                else begin
+                    matrixB[i][j] <= data_in;
+                    matrix_select <= MATRIX_A;
+                    state <= COMPUTING_MATRIX;
+                end
+            end
+            
+            else if (i < N-1 && j == N-1) begin
+                 i <= i + 1;
+                 j <= 0;
+                 
+                if (matrix_select == MATRIX_A) begin
+                    matrixA[i][j] <= data_in;
+                end
+                
+                else begin
+                    matrixB[i][j] <= data_in;
+                end
+            end
+            
+            else begin
+                j <= j + 1;
+                
+                if (matrix_select == MATRIX_A) begin
+                    matrixA[i][j] <= data_in;
+                end
+                
+                else begin
+                    matrixB[i][j] <= data_in;
+                end
+            end
         end
     
         else if (state == COMPUTING_MATRIX) begin
