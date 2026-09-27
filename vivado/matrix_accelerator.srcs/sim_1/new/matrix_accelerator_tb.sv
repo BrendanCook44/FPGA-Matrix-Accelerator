@@ -41,6 +41,9 @@ module matrix_accelerator_tb;
         end
        
        wait (dut.state == TRANSMITTING_MATRIX);
+       
+       $display("Done");
+       $finish;
 
     end
     

@@ -7,6 +7,9 @@
 // 4 - Send C Matrix 64 Bytes Out To UART TX
 // 5 - Set state to IDLE
 
+// i - Which row/line - changing it moves up or down
+// j - Which column -  how far along the line - changing it moves you left or right
+
 module matrix_accelerator #(
     parameter N = 8
 )(
@@ -44,6 +47,10 @@ module matrix_accelerator #(
     logic signed [19:0] accumulator = 0;
     
     always_ff @ (posedge clk) begin
+    
+        if (tx_start) begin
+            tx_start <= 0;
+        end
         
         if (state == RECEIVING_DATA && data_valid) begin
             // Listen for 128 Bytes to Populate Matrices A and B
@@ -79,18 +86,31 @@ module matrix_accelerator #(
                 k <= k + 1;
             end
         end
-        
+
         else if (state == TRANSMITTING_MATRIX) begin
             // Send Matrix C via UART TX in Row Major Order
+            if (i == N-1 && j == N-1 && tx_ready) begin
+                i <= 0;
+                j <= 0;
+                data_out <= matrixC[i][j];
+                tx_start <= 1;
+                state <= RECEIVING_DATA;
+            end
+            
+            else if (i < N-1 && j == N-1 && tx_ready) begin
+                i <= i + 1;
+                j <= 0;
+                data_out <= matrixC[i][j];
+                tx_start <= 1;
+            end
+            
+            else begin
+                if (tx_ready) begin
+                    j <= j + 1;
+                    data_out <= matrixC[i][j];
+                    tx_start <= 1;
+                end
+            end
         end
    end
-
 endmodule
-   
-//     Check for 64 Data Valid Signals from UART RX for Matrix A
-//     if (counter > 64) begin
-//         if (data_valid) begin
-//             matrixA[i][j] <= data_in;
-//             counter <= counter + 1;
-//         end
-//     end
