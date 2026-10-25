@@ -8,7 +8,7 @@
 // 5 - Set state to IDLE
 
 // i - Which row/line - changing it moves up or down
-// j - Which column -  how far along the line - changing it moves you left or right
+// j - Which column -  how far along the line - changing it moves left or right
 
 module matrix_accelerator #(
     parameter N = 8
@@ -41,7 +41,7 @@ module matrix_accelerator #(
     logic signed [19:0] matrixC [0:7][0:7];
     
     // State
-    state_t state = COMPUTING_MATRIX;
+    state_t state = RECEIVING_DATA;
     matrix_selection_t matrix_select = MATRIX_A;
 
     // Accumulator    
