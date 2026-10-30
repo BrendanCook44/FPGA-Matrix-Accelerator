@@ -26,10 +26,16 @@ module matrix_accelerator #(
     
     // Internal Module Declarations
 
-    // i, j, k counters
+    // i, j, k matrix location counters
     logic [3:0] i = 0;
     logic [3:0] j = 0;
     logic [3:0] k = 0;
+    
+    // When sending a 20 bit output matrix element out via UART TX, keep track of which segment of bytes have to be sent out
+    // 0 (0 - 7)
+    // 1 (8 - 15)
+    // 2 (16 - 20)
+    logic [2:0] byteIndex = 0;
     
     // Matrix A
     logic signed [7:0] matrixA [0:7][0:7];
@@ -130,26 +136,72 @@ module matrix_accelerator #(
 
         else if (state == TRANSMITTING_MATRIX) begin
             // Send Matrix C via UART TX in Row Major Order
+            // Don't modify i and j until all bytes for an output element are sent out
             if (i == N-1 && j == N-1 && tx_ready) begin
-                i <= 0;
-                j <= 0;
-                data_out <= matrixC[i][j];
-                tx_start <= 1;
-                state <= RECEIVING_DATA;
+                if (byteIndex == 0) begin
+                    data_out <= matrixC[i][j][7:0];
+                    byteIndex <= byteIndex + 1;
+                    tx_start <= 1;
+                end
+                
+                else if (byteIndex == 1) begin
+                    data_out <= matrixC[i][j][15:8];
+                    byteIndex <= byteIndex + 1;
+                    tx_start <= 1;
+                end
+                
+                else begin
+                    data_out <= matrixC[i][j][19:16];
+                    byteIndex <= 0;
+                    i <= 0;
+                    j <= 0;
+                    tx_start <= 1;
+                    state <= RECEIVING_DATA;
+                end
             end
             
             else if (i < N-1 && j == N-1 && tx_ready) begin
-                i <= i + 1;
-                j <= 0;
-                data_out <= matrixC[i][j];
-                tx_start <= 1;
+                if (byteIndex == 0) begin
+                    data_out <= matrixC[i][j][7:0];
+                    byteIndex <= byteIndex + 1;
+                    tx_start <= 1;
+                end
+                
+                else if (byteIndex == 1) begin
+                    data_out <= matrixC[i][j][15:8];
+                    byteIndex <= byteIndex + 1;
+                    tx_start <= 1;
+                end
+                
+                else begin
+                    data_out <= matrixC[i][j][19:16];
+                    byteIndex <= 0;
+                    i <= i + 1;
+                    j <= 0;
+                    tx_start <= 1;
+                end
             end
             
             else begin
                 if (tx_ready) begin
-                    j <= j + 1;
-                    data_out <= matrixC[i][j];
-                    tx_start <= 1;
+                    if (byteIndex == 0) begin
+                        data_out <= matrixC[i][j][7:0];
+                        byteIndex <= byteIndex + 1;
+                        tx_start <= 1;
+                    end
+                
+                    else if (byteIndex == 1) begin
+                        data_out <= matrixC[i][j][15:8];
+                        byteIndex <= byteIndex + 1;
+                        tx_start <= 1;
+                    end
+                
+                    else begin
+                        data_out <= matrixC[i][j][19:16];
+                        byteIndex <= 0;
+                        j <= j + 1;
+                        tx_start <= 1;
+                    end
                 end
             end
         end
