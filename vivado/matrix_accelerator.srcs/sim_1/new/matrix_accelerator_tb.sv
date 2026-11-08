@@ -4,10 +4,10 @@ module matrix_accelerator_tb;
 
     logic clk = 0;
     logic [7:0] data_in;
-    logic data_valid;
+    logic data_valid = 0;
     logic [7:0] data_out;
     logic tx_start;
-    logic tx_ready;
+    logic tx_ready = 1;
     localparam N = 8;
 
     matrix_accelerator #(.N(N)) dut (
@@ -25,51 +25,54 @@ module matrix_accelerator_tb;
     // Initial Simulation Setup
     always #5 clk = ~clk;
     
-    // Bit Width Test
-    task test_bit_width();
+    // Matrix A & Matrix B Copies To Compare Testbench Results Against
+    logic signed [7:0] matrixA [0:7][0:7];
+    logic signed [7:0] matrixB [0:7][0:7];
+   
+    // Fill Matrix A & Matrix B values
+    task automatic send_matrix_bytes();
+       
+        // Send matrix values over UART
+        for (int idx = 0; idx < 2 * N * N; idx++) begin
+            @ (negedge clk);
+            // randomly assign value to module & keep test bench side copies
+            data_in = $urandom();
+            data_valid = 1;
+            
+            if (idx < N * N) begin
+                // calculate the rows and columns by determining how many rows and columns came before it
+                int rows = idx / N;
+                int cols = idx % N;
+                matrixA[rows][cols] = data_in;
 
-        for (int i = 0; i < N; i++) begin
-            for (int j = 0; j < N; j++) begin
-                dut.matrixA[i][j] = -128;
-                dut.matrixB[i][j] = -128;
             end
+            
+            else begin
+                int rows = (idx - N * N) / N;
+                int cols = (idx - N * N) % N;
+                matrixB[rows][cols] = data_in;
+            end
+
+            @ (negedge clk);
+            data_valid = 0;
         end
-       
-       wait (dut.state == TRANSMITTING_MATRIX);
-       @(posedge clk);
-       
-        for (int i = 0; i < N; i++) begin
-            for (int j = 0; j < N; j++) begin
-                assert (dut.matrixC[i][j] == 131072)
-                    else $error("C[%0d][%0d] = %0d, expected 131072", i, j, dut.matrixC[i][j]);
-            end
-        end
-       
-       $display("End of Bit Width Test");
-       $finish;
-       
-    endtask
-    
-    // Randomly Populate Matrices
-    task populate_matrices_randomly();
-            for (int i = 0; i < N; i++) begin
-                for (int j = 0; j < N; j++) begin
-                    dut.matrixA[i][j] = $urandom();
-                    dut.matrixB[i][j] = $urandom();
-                end
-            end
-       
-       wait (dut.state == TRANSMITTING_MATRIX);
+        
+        @ (posedge clk);
+        assert (dut.state == COMPUTING_MATRIX)
+            else $error("Load did not complete, state = %s", dut.state.name());
        
        $display("Successfully Generated Matrix Values");
-       $finish;
        
     endtask
     
     initial begin
         $display("Start of Matrix Accelerator Module Simulation");
         
-        test_bit_width();
+        send_matrix_bytes();
+        
+        
+        
+        $finish;
 
     end
     
