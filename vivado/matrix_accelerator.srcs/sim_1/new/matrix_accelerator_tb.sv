@@ -32,10 +32,10 @@ module matrix_accelerator_tb;
     // Fill Matrix A & Matrix B values
     task automatic send_matrix_bytes();
        
-        // Send matrix values over UART
+        // Send matrix values
         for (int idx = 0; idx < 2 * N * N; idx++) begin
             @ (negedge clk);
-            // randomly assign value to module & keep test bench side copies
+            // assign random values to module
             data_in = $urandom();
             data_valid = 1;
             
